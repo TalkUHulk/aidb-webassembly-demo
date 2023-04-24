@@ -164,7 +164,6 @@
 
         wasmFeatureDetect.threads().then(threadsSupported => {
             has_threads = threadsSupported;
-
             if (has_simd)
             {
                 if (has_threads)
@@ -190,8 +189,8 @@
 
             console.log('load ' + aidb_module_name);
 
-            var aidb_wasm = aidb_module_name + '.wasm';
-            var aidb_js = aidb_module_name + '.js';
+            var aidb_wasm = 'aidb/' + aidb_module_name + '.wasm';
+            var aidb_js = 'aidb/' + aidb_module_name + '.js';
 
             fetch(aidb_wasm)
                 .then(response => response.arrayBuffer())

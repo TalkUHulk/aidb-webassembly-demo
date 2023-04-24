@@ -7,5 +7,5 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         http.server.SimpleHTTPRequestHandler.end_headers(self)
 
 http.server.SimpleHTTPRequestHandler.extensions_map['.wasm'] = 'application/wasm'
-httpd = http.server.HTTPServer(('localhost', 12580), MyHttpRequestHandler)
+httpd = http.server.HTTPServer(('localhost', 12581), MyHttpRequestHandler)
 httpd.serve_forever()

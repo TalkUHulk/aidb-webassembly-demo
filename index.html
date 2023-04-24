@@ -208,23 +208,14 @@
     });
 
     var dst = null;
-    var imageLoader = document.getElementById('imageLoader');
-    imageLoader.addEventListener('change', handleImage, false);
-    var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
     var model_type = -1;
     var data_org = null;
     var upload = false;
-    var playing = false;
-    
-    // video
-    switchcamerabtn = document.getElementById('switch-camera-btn');
-    // playbtn = document.getElementById('play-btn');
-    video = document.getElementById('video');
-    canvas_video = document.getElementById('canvas_video');
-    ctx_video = canvas_video.getContext('2d');
+
     var shouldFaceUser = true;
     var stream = null;
+
+
     document.getElementById("play-btn").addEventListener("click", function() {
         var supports = navigator.mediaDevices.getSupportedConstraints();
         if (supports['facingMode'] === true) {
@@ -256,156 +247,45 @@
 
     });
 
-    video.addEventListener('play', function() {
-        //Setup image memory
-        var id = ctx_video.getImageData(0, 0, canvas.width, canvas.height);
-        var d = id.data;
+    window.addEventListener('DOMContentLoaded', function() {
+        imageLoader = document.getElementById('imageLoader');
+        imageLoader.addEventListener('change', handleImage, false);
+        canvas = document.getElementById('canvas');
+        ctx = canvas.getContext('2d');
 
-        if (wasmModuleLoaded) {
-            mallocAndCallSFilter();
-        } else {
-            wasmModuleLoadedCallbacks.push(mallocAndCallSFilter);
-        }
+        // video
+        switchcamerabtn = document.getElementById('switch-camera-btn');
+        // playbtn = document.getElementById('play-btn');
+        video = document.getElementById('video');
+        canvas_video = document.getElementById('canvas_video');
+        ctx_video = canvas_video.getContext('2d');
 
-        function mallocAndCallSFilter() {
-            if (dst != null)
-            {
-                _free(dst);
-                dst = null;
+        video.addEventListener('play', function () {
+            //Setup image memory
+            var id = ctx_video.getImageData(0, 0, canvas.width, canvas.height);
+            var d = id.data;
+
+            if (wasmModuleLoaded) {
+                mallocAndCallSFilter();
+            } else {
+                wasmModuleLoadedCallbacks.push(mallocAndCallSFilter);
             }
 
-            dst = _malloc(d.length);
-
-            //console.log("What " + d.length);
-
-            sFilter();
-        }
-    });
-
-    var sFilter = function() {
-        if (video.paused || video.ended) return;
-
-        ctx_video.fillRect(0, 0, 640, 480);
-        ctx_video.drawImage(video, 0, 0, 640, 480);
-
-        inference_video();
-
-        window.requestAnimationFrame(sFilter);
-    }
-
-    function inference_video(){
-        var imageData = ctx_video.getImageData(0, 0, canvas_video.width, canvas_video.height);
-        
-        var data = imageData.data;
-        if (dst != null)
-        {
-            _free(dst);
-            dst = null;
-        }
-
-        dst = _malloc(data.length);
-
-        HEAPU8.set(data, dst);
-
-        _aidb_wasm(dst, canvas_video.width, canvas_video.height, model_type);
-        var result = HEAPU8.subarray(dst, dst + data.length);
-        imageData.data.set(result);
-        ctx_video.putImageData(imageData, 0, 0);
-    }
-
-    function capture() {
-            var constraints = { audio: false, video: { width: 640, height: 480, facingMode: shouldFaceUser ? 'user' : 'environment' } };
-            navigator.mediaDevices.getUserMedia(constraints)
-                .then(function(mediaStream) {
-                    var video = document.querySelector('video');
-                    stream = mediaStream;
-                    video.srcObject = mediaStream;
-                    video.onloadedmetadata = function(e) {
-                        video.play();
-                    };
-                })
-                .catch(function(err) {
-                    console.log(err.message);
-                });
-        }
-
-    function handleImage(e){
-
-        var reader = new FileReader();
-        reader.onload = function(event){
-            var img = new Image();
-            img.onload = function(){
-                let max_size = Math.max(img.width, img.height);
-                let factor = 1.0;
-                if(max_size > 640){
-                    factor = 640.0 / max_size;
+            function mallocAndCallSFilter() {
+                if (dst != null) {
+                    _free(dst);
+                    dst = null;
                 }
-                
-                canvas.width = Math.floor(img.width * factor);
-                canvas.height = Math.floor(img.height * factor);
-                
-                ctx.drawImage(img,0,0,canvas.width, canvas.height);
-                // console.log("model_type:", model_type, canvas.width, canvas.height);
-                // save org image data
-                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                data_org = imageData.data
-                if (model_type !== -1){
-                    inference()
-                }
+
+                dst = _malloc(d.length);
+
+                //console.log("What " + d.length);
+
+                sFilter();
             }
-            img.src = event.target.result;
-            upload = true;
-        }
-        reader.readAsDataURL(e.target.files[0]);
-    }
+        });
 
-    function inference(){
-        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        
-        var data = imageData.data;
-        if (dst != null)
-        {
-            _free(dst);
-            dst = null;
-        }
-
-        dst = _malloc(data.length);
-
-        HEAPU8.set(data, dst);
-
-        _aidb_wasm(dst, canvas.width, canvas.height, model_type);
-        var result = HEAPU8.subarray(dst, dst + data.length);
-        imageData.data.set(result);
-        ctx.putImageData(imageData, 0, 0);
-    }
-
-    function update(){
-        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        if (dst != null)
-        {
-            _free(dst);
-            dst = null;
-        }
-        dst = _malloc(data_org.length);
-
-        // console.log("=====data_org:", data_org.length, data_org)
-
-        HEAPU8.set(data_org, dst);
-        _aidb_wasm(dst, canvas.width, canvas.height, model_type);
-        const result = HEAPU8.subarray(dst, dst + data_org.length);
-        imageData.data.set(result);
-        ctx.putImageData(imageData, 0, 0);
-    }
-
-    function cb_unchecked(){
-        var checked = document.getElementsByClassName('checkbox-list');
-        for (i = 0; i < checked.length; i++) {
-            checked[i].checked = false;
-
-        }
-    }
-
-    document.getElementById('scrfd').onclick = function(){
+        document.getElementById('scrfd').onclick = function(){
         if(document.getElementById('scrfd').checked===true){
             model_type = 0;
             cb_unchecked();
@@ -482,21 +362,11 @@
         }
     }
 
-
-
-    function cb_unchecked2(){
-        var checked = document.getElementsByClassName('checkbox-list2');
-        for (i = 0; i < checked.length; i++) {
-            checked[i].checked = false;
-
-        }
-    }
-
     document.getElementById('scrfd_v').onclick = function(){
         if(document.getElementById('scrfd_v').checked===true){
             model_type = 0;
             cb_unchecked2();
-            document.getElementById('scrfd_v').checked=true;      
+            document.getElementById('scrfd_v').checked=true;
         }
     }
 
@@ -539,7 +409,7 @@
             document.getElementById('yolox_v').checked=true;
         }
     }
-    
+
     document.getElementById('movenet_v').onclick = function(){
         if(document.getElementById('movenet_v').checked===true){
             model_type = 6;
@@ -547,6 +417,141 @@
             document.getElementById('movenet_v').checked=true;
         }
     }
+
+
+    });
+    var sFilter = function() {
+        if (video.paused || video.ended) return;
+
+        ctx_video.fillRect(0, 0, 640, 480);
+        ctx_video.drawImage(video, 0, 0, 640, 480);
+
+        inference_video();
+
+        window.requestAnimationFrame(sFilter);
+    }
+
+    function inference_video(){
+        var imageData = ctx_video.getImageData(0, 0, canvas_video.width, canvas_video.height);
+        
+        var data = imageData.data;
+        if (dst != null)
+        {
+            _free(dst);
+            dst = null;
+        }
+
+        dst = _malloc(data.length);
+
+        HEAPU8.set(data, dst);
+
+        _aidb_wasm(dst, canvas_video.width, canvas_video.height, model_type);
+        var result = HEAPU8.subarray(dst, dst + data.length);
+        imageData.data.set(result);
+        ctx_video.putImageData(imageData, 0, 0);
+    }
+
+    function capture() {
+            var constraints = { audio: false, video: { width: 640, height: 480, facingMode: shouldFaceUser ? 'user' : 'environment' } };
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(function(mediaStream) {
+                    var video = document.querySelector('video');
+                    stream = mediaStream;
+                    video.srcObject = mediaStream;
+                    video.onloadedmetadata = function(e) {
+                        video.play();
+                    };
+                })
+                .catch(function(err) {
+                    console.log(err.message);
+                });
+        }
+
+    function handleImage(e){
+
+        var reader = new FileReader();
+        reader.onload = function(event){
+            var img = new Image();
+            img.onload = function(){
+                let max_size = Math.max(img.width, img.height);
+                let factor = 1.0;
+                if(max_size > 640){
+                    factor = 640.0 / max_size;
+                }
+
+                canvas.width = Math.floor(img.width * factor);
+                canvas.height = Math.floor(img.height * factor);
+
+                ctx.drawImage(img,0,0,canvas.width, canvas.height);
+                // console.log("model_type:", model_type, canvas.width, canvas.height);
+                // save org image data
+                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                data_org = imageData.data
+                if (model_type !== -1){
+                    inference()
+                }
+            }
+            img.src = event.target.result;
+            upload = true;
+        }
+        reader.readAsDataURL(e.target.files[0]);
+    }
+
+    function inference(){
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        
+        var data = imageData.data;
+        if (dst != null)
+        {
+            _free(dst);
+            dst = null;
+        }
+
+        dst = _malloc(data.length);
+
+        HEAPU8.set(data, dst);
+
+        _aidb_wasm(dst, canvas.width, canvas.height, model_type);
+        var result = HEAPU8.subarray(dst, dst + data.length);
+        imageData.data.set(result);
+        ctx.putImageData(imageData, 0, 0);
+    }
+
+    function update(){
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        if (dst != null)
+        {
+            _free(dst);
+            dst = null;
+        }
+        dst = _malloc(data_org.length);
+
+        // console.log("=====data_org:", data_org.length, data_org)
+
+        HEAPU8.set(data_org, dst);
+        _aidb_wasm(dst, canvas.width, canvas.height, model_type);
+        const result = HEAPU8.subarray(dst, dst + data_org.length);
+        imageData.data.set(result);
+        ctx.putImageData(imageData, 0, 0);
+    }
+
+    function cb_unchecked(){
+        var checked = document.getElementsByClassName('checkbox-list');
+        for (i = 0; i < checked.length; i++) {
+            checked[i].checked = false;
+
+        }
+    }
+
+    function cb_unchecked2(){
+        var checked = document.getElementsByClassName('checkbox-list2');
+        for (i = 0; i < checked.length; i++) {
+            checked[i].checked = false;
+
+        }
+    }
+
+
 
 </script>
 </body>

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+
+    <title>aidb webassembly demo</title>
+    
+    <link rel="stylesheet" type="text/css" href="./css/FiraCode.css">
+    <link rel="stylesheet" type="text/css" href="./css/nutssss.css">
+    <link rel="icon" href="./favicon.ico">
+</head>
+
+<body>
+    <div id="box">
+        <!-- 个人资料卡片 -->
+        <div class="meBox">
+            <!-- 头像 -->
+            <div class="headPhoto"></div>
+            <!-- 介绍 -->
+            <div class="meBox-title">
+                <p>I'm Hulk</p>
+                <div class="fg"></div>
+            </div>
+            <div class="meBox-text">
+                <p>Loyal to the soul<img src="./img/arsenal.png" alt="Arsenal" style="width: 25px; vertical-align: middle;"></p></br>
+                <p>This is aidb wasm demo</p>
+                <p><img src="./img/logo.png" alt="Arsenal" style="width: 50px; vertical-align: middle;">: AI model deploy by onnx/mnn/ncnn/openvino/tnn/paddlelite through c++</p>
+                
+            </div>
+            <!-- 两个按钮 -->
+            <div class="meBox-Button">
+                <a href="https://github.com/TalkUHulk">GitHub</a>
+                <a href="http://www.hulk.show">Blog</a>
+            </div>
+        </div>
+
+        <!-- 伪终端介绍 -->
+        <div id="cmdBox">
+            <!-- 第一个终端 -->
+            <div class="cmd">
+                <!-- 三个按钮 -->
+                <div class="click">
+                    <div class="red"></div>
+                    <div class="yellow"></div>
+                    <div class="green"></div>
+                </div>
+                <!-- 顶部标题 -->
+                <div class="title">
+                    <span>video - bash</span>
+                </div>
+                <!-- 终端内文字 -->
+                <div class="cmdText">
+                    <span style="color: rgb(0, 190, 0);">aidb@TalkUHulk</span>
+                    <span style="color: blue;">~</span>
+                    <span style="color: rgb(39, 39, 39);">ls support-model.txt</span>
+                </div><br/>
+
+                <label for="scrfd_v"></label><input class="checkbox-list2" type="checkbox" id="scrfd_v" name="0" value=0>
+                <label for="0"> scrfd </label>
+                <label for="pfpld_v"></label><input class="checkbox-list2" type="checkbox" id="pfpld_v" name="1" value=1>
+                <label for="1"> pfpld </label>
+                <label for="tddfav2_v"></label><input class="checkbox-list2" type="checkbox" id="tddfav2_v" name="2" value=2>
+                <label for="2"> tddfav2 </label>
+                <label for="yolov7_v"></label><input class="checkbox-list2" type="checkbox" id="yolov7_v" name="3" value=3>
+                <label for="3"> yolov7 </label>
+                <label for="yolov8_v"></label><input class="checkbox-list2" type="checkbox" id="yolov8_v" name="4" value=4>
+                <label for="4"> yolov8 </label>
+                <label for="yolox_v"></label><input class="checkbox-list2" type="checkbox" id="yolox_v" name="5" value=5>
+                <label for="5"> yolox </label>
+                <label for="movenet_v"></label><input class="checkbox-list2" type="checkbox" id="movenet_v" name="6" value=6>
+                <label for="6"> movenet </label><br/>
+                <div>
+                    <canvas id="canvas_video" width="640px" height="480px" style="border:1px solid #000000"></canvas>
+                    <video hidden="true" id="video" playsinline></video>
+                </div>
+                <span style="color: rgb(0, 190, 0);">aidb@TalkUHulk</span>
+                <span style="color: blue;">~</span>
+                <span style="color: rgb(39, 39, 39);">cat warning.txt</span>
+                 <p style="color: rgb(255, 0, 0);">Note: Github pages deployment cannot enable multithreading, please deploy locally. </p>
+                <div>
+                    <button id="switch-camera-btn" style="height:48px">Switch Camera</button>
+                    <button id="play-btn" style="height:48px">Play Camera</button>
+                    <button id="stop-btn" style="height:48px">Stop Camera</button>
+                </div>
+
+            </div>
+            <!-- 第二个终端 -->
+            <div class="cmd cmd2">
+                <!-- 三个按钮 -->
+                <div class="click">
+                    <div class="red"></div>
+                    <div class="yellow"></div>
+                    <div class="green"></div>
+                </div>
+                <!-- 顶部标题 -->
+                <div class="title">
+                    <span>image - bash</span>
+                </div>
+                <!-- 终端内文字 -->
+                <div class="cmdText">
+                    <span style="color: rgb(0, 190, 0);">aidb@TalkUHulk</span>
+                    <span style="color: blue;">~</span>
+                    <span style="color: rgb(39, 39, 39);">./upload.sh</span>
+                    <br />
+                    <div class="upload-container">
+                        <input type="file" id="imageLoader" name="imageLoader" accept="image/*" required/>
+                    </div>
+                    <br />
+                    <span style="color: rgb(0, 190, 0);">aidb@TalkUHulk</span>
+                    <span style="color: blue;">~</span>
+                    <span style="color: rgb(39, 39, 39);">ls support-model.txt </span><br/>
+                    
+                    <label for="scrfd"></label><input class="checkbox-list" type="checkbox" id="scrfd" name="0" value=0>
+                    <label for="0"> scrfd </label>
+                    <label for="pfpld"></label><input class="checkbox-list" type="checkbox" id="pfpld" name="1" value=1>
+                    <label for="1"> pfpld </label>
+                    <label for="tddfav2"></label><input class="checkbox-list" type="checkbox" id="tddfav2" name="2" value=2>
+                    <label for="2"> tddfav2 </label>
+                    <label for="yolov7"></label><input class="checkbox-list" type="checkbox" id="yolov7" name="3" value=3>
+                    <label for="3"> yolov7 </label>
+                    <label for="yolov8"></label><input class="checkbox-list" type="checkbox" id="yolov8" name="4" value=4>
+                    <label for="4"> yolov8 </label>
+                    <label for="yolox"></label><input class="checkbox-list" type="checkbox" id="yolox" name="5" value=5>
+                    <label for="5"> yolox </label>
+                    <label for="movenet"></label><input class="checkbox-list" type="checkbox" id="movenet" name="6" value=6>
+                    <label for="6"> movenet </label><br/>
+                    <canvas id="canvas"></canvas><br/>
+                </div>
+
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div id="footer">
+        <p>© AIDB Webassembly Demo | <a href="https://github.com/TalkUHulk/ai.deploy.box">ai.deploy.box</a></p>
+        <p>POWERED BY <a href="https://github.com/TalkUHulk">TalkUHulk</a></p>
+    </div>
+
+    <script src="wasmFeatureDetect.js"></script>
+
+<script type='text/javascript'>
+    var Module = {};
+
+    var has_simd;
+    var has_threads;
+
+    var wasmModuleLoaded = false;
+    var wasmModuleLoadedCallbacks = [];
+
+    Module.onRuntimeInitialized = function() {
+        wasmModuleLoaded = true;
+        for (var i = 0; i < wasmModuleLoadedCallbacks.length; i++) {
+            wasmModuleLoadedCallbacks[i]();
+        }
+    }
+
+    wasmFeatureDetect.simd().then(simdSupported => {
+        has_simd = simdSupported;
+
+        wasmFeatureDetect.threads().then(threadsSupported => {
+            has_threads = threadsSupported;
+
+            if (has_simd)
+            {
+                if (has_threads)
+                {
+                    aidb_module_name = 'aidb-wasm-simd-threads';
+                    // aidb_module_name = 'aidb-wasm-basic';
+                }
+                else
+                {
+                    aidb_module_name = 'aidb-wasm-simd';
+                    // aidb_module_name = 'aidb-wasm-basic';
+                }
+            }
+            else
+            {
+                if (has_threads)
+                {
+                    aidb_module_name = 'aidb-wasm-threads';
+                    // aidb_module_name = 'aidb-wasm-basic';
+                }
+                else
+                {
+                    aidb_module_name = 'aidb-wasm-basic';
+                }
+            }
+
+            console.log('load ' + aidb_module_name);
+
+            var aidb_wasm = aidb_module_name + '.wasm';
+            var aidb_js = aidb_module_name + '.js';
+
+            fetch(aidb_wasm)
+                .then(response => response.arrayBuffer())
+                .then(buffer => {
+                    Module.wasmBinary = buffer;
+                    var script = document.createElement('script');
+                    script.src = aidb_js;
+                    script.onload = function() {
+                        console.log('Emscripten boilerplate loaded.');
+                    }
+                    document.body.appendChild(script);
+                });
+
+        });
+    });
+
+    var dst = null;
+    var imageLoader = document.getElementById('imageLoader');
+    imageLoader.addEventListener('change', handleImage, false);
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    var model_type = -1;
+    var data_org = null;
+    var upload = false;
+    var playing = false;
+    
+    // video
+    switchcamerabtn = document.getElementById('switch-camera-btn');
+    // playbtn = document.getElementById('play-btn');
+    video = document.getElementById('video');
+    canvas_video = document.getElementById('canvas_video');
+    ctx_video = canvas_video.getContext('2d');
+    var shouldFaceUser = true;
+    var stream = null;
+    document.getElementById("play-btn").addEventListener("click", function() {
+        var supports = navigator.mediaDevices.getSupportedConstraints();
+        if (supports['facingMode'] === true) {
+            switchcamerabtn.disabled = false;
+        }
+
+        switchcamerabtn.addEventListener('click', function() {
+            if (stream == null)
+                return
+
+            stream.getTracks().forEach(t => {
+                t.stop();
+            });
+
+            shouldFaceUser = !shouldFaceUser;
+            capture();
+        });
+        capture();
+        
+    });
+
+    document.getElementById("stop-btn").addEventListener('click', function() {
+                if (stream == null)
+                    return
+
+                stream.getTracks().forEach(t => {
+                    t.stop();
+                });
+
+    });
+
+    video.addEventListener('play', function() {
+        //Setup image memory
+        var id = ctx_video.getImageData(0, 0, canvas.width, canvas.height);
+        var d = id.data;
+
+        if (wasmModuleLoaded) {
+            mallocAndCallSFilter();
+        } else {
+            wasmModuleLoadedCallbacks.push(mallocAndCallSFilter);
+        }
+
+        function mallocAndCallSFilter() {
+            if (dst != null)
+            {
+                _free(dst);
+                dst = null;
+            }
+
+            dst = _malloc(d.length);
+
+            //console.log("What " + d.length);
+
+            sFilter();
+        }
+    });
+
+    var sFilter = function() {
+        if (video.paused || video.ended) return;
+
+        ctx_video.fillRect(0, 0, 640, 480);
+        ctx_video.drawImage(video, 0, 0, 640, 480);
+
+        inference_video();
+
+        window.requestAnimationFrame(sFilter);
+    }
+
+    function inference_video(){
+        var imageData = ctx_video.getImageData(0, 0, canvas_video.width, canvas_video.height);
+        
+        var data = imageData.data;
+        if (dst != null)
+        {
+            _free(dst);
+            dst = null;
+        }
+
+        dst = _malloc(data.length);
+
+        HEAPU8.set(data, dst);
+
+        _aidb_wasm(dst, canvas_video.width, canvas_video.height, model_type);
+        var result = HEAPU8.subarray(dst, dst + data.length);
+        imageData.data.set(result);
+        ctx_video.putImageData(imageData, 0, 0);
+    }
+
+    function capture() {
+            var constraints = { audio: false, video: { width: 640, height: 480, facingMode: shouldFaceUser ? 'user' : 'environment' } };
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(function(mediaStream) {
+                    var video = document.querySelector('video');
+                    stream = mediaStream;
+                    video.srcObject = mediaStream;
+                    video.onloadedmetadata = function(e) {
+                        video.play();
+                    };
+                })
+                .catch(function(err) {
+                    console.log(err.message);
+                });
+        }
+
+    function handleImage(e){
+
+        var reader = new FileReader();
+        reader.onload = function(event){
+            var img = new Image();
+            img.onload = function(){
+                let max_size = Math.max(img.width, img.height);
+                let factor = 1.0;
+                if(max_size > 640){
+                    factor = 640.0 / max_size;
+                }
+                
+                canvas.width = Math.floor(img.width * factor);
+                canvas.height = Math.floor(img.height * factor);
+                
+                ctx.drawImage(img,0,0,canvas.width, canvas.height);
+                // console.log("model_type:", model_type, canvas.width, canvas.height);
+                // save org image data
+                var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                data_org = imageData.data
+                if (model_type !== -1){
+                    inference()
+                }
+            }
+            img.src = event.target.result;
+            upload = true;
+        }
+        reader.readAsDataURL(e.target.files[0]);
+    }
+
+    function inference(){
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        
+        var data = imageData.data;
+        if (dst != null)
+        {
+            _free(dst);
+            dst = null;
+        }
+
+        dst = _malloc(data.length);
+
+        HEAPU8.set(data, dst);
+
+        _aidb_wasm(dst, canvas.width, canvas.height, model_type);
+        var result = HEAPU8.subarray(dst, dst + data.length);
+        imageData.data.set(result);
+        ctx.putImageData(imageData, 0, 0);
+    }
+
+    function update(){
+        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        if (dst != null)
+        {
+            _free(dst);
+            dst = null;
+        }
+        dst = _malloc(data_org.length);
+
+        // console.log("=====data_org:", data_org.length, data_org)
+
+        HEAPU8.set(data_org, dst);
+        _aidb_wasm(dst, canvas.width, canvas.height, model_type);
+        const result = HEAPU8.subarray(dst, dst + data_org.length);
+        imageData.data.set(result);
+        ctx.putImageData(imageData, 0, 0);
+    }
+
+    function cb_unchecked(){
+        var checked = document.getElementsByClassName('checkbox-list');
+        for (i = 0; i < checked.length; i++) {
+            checked[i].checked = false;
+
+        }
+    }
+
+    document.getElementById('scrfd').onclick = function(){
+        if(document.getElementById('scrfd').checked===true){
+            model_type = 0;
+            cb_unchecked();
+            document.getElementById('scrfd').checked=true;
+            if (upload){
+                update();
+            }
+        }
+    }
+
+    document.getElementById('pfpld').onclick = function(){
+        if(document.getElementById('pfpld').checked===true){
+            model_type = 1;
+            cb_unchecked();
+            document.getElementById('pfpld').checked=true;
+            if (upload){
+                update();
+            }
+        }
+    }
+
+    document.getElementById('tddfav2').onclick = function(){
+        if(document.getElementById('tddfav2').checked===true){
+            model_type = 2;
+            cb_unchecked();
+            document.getElementById('tddfav2').checked=true;
+            if (upload){
+                update();
+            }
+        }
+    }
+
+    document.getElementById('yolov7').onclick = function(){
+        if(document.getElementById('yolov7').checked===true){
+            model_type = 3;
+            cb_unchecked();
+            document.getElementById('yolov7').checked=true;
+            if (upload){
+                update();
+            }
+        }
+    }
+
+    document.getElementById('yolov8').onclick = function(){
+        if(document.getElementById('yolov8').checked===true){
+            model_type = 4;
+            cb_unchecked();
+            document.getElementById('yolov8').checked=true;
+            if (upload){
+                update();
+            }
+        }
+    }
+
+    document.getElementById('yolox').onclick = function(){
+        if(document.getElementById('yolox').checked===true){
+            model_type = 5;
+            cb_unchecked();
+            document.getElementById('yolox').checked=true;
+            if (upload){
+                update();
+            }
+        }
+    }
+
+    document.getElementById('movenet').onclick = function(){
+        if(document.getElementById('movenet').checked===true){
+            model_type = 6;
+            cb_unchecked();
+            document.getElementById('movenet').checked=true;
+            if (upload){
+                update();
+            }
+        }
+    }
+
+
+
+    function cb_unchecked2(){
+        var checked = document.getElementsByClassName('checkbox-list2');
+        for (i = 0; i < checked.length; i++) {
+            checked[i].checked = false;
+
+        }
+    }
+
+    document.getElementById('scrfd_v').onclick = function(){
+        if(document.getElementById('scrfd_v').checked===true){
+            model_type = 0;
+            cb_unchecked2();
+            document.getElementById('scrfd_v').checked=true;      
+        }
+    }
+
+    document.getElementById('pfpld_v').onclick = function(){
+        if(document.getElementById('pfpld_v').checked===true){
+            model_type = 1;
+            cb_unchecked2();
+            document.getElementById('pfpld_v').checked=true;
+        }
+    }
+
+    document.getElementById('tddfav2_v').onclick = function(){
+        if(document.getElementById('tddfav2_v').checked===true){
+            model_type = 2;
+            cb_unchecked2();
+            document.getElementById('tddfav2_v').checked=true;
+        }
+    }
+
+    document.getElementById('yolov7_v').onclick = function(){
+        if(document.getElementById('yolov7_v').checked===true){
+            model_type = 3;
+            cb_unchecked2();
+            document.getElementById('yolov7_v').checked=true;
+        }
+    }
+
+    document.getElementById('yolov8_v').onclick = function(){
+        if(document.getElementById('yolov8_v').checked===true){
+            model_type = 4;
+            cb_unchecked2();
+            document.getElementById('yolov8_v').checked=true;
+        }
+    }
+
+    document.getElementById('yolox_v').onclick = function(){
+        if(document.getElementById('yolox_v').checked===true){
+            model_type = 5;
+            cb_unchecked2();
+            document.getElementById('yolox_v').checked=true;
+        }
+    }
+    
+    document.getElementById('movenet_v').onclick = function(){
+        if(document.getElementById('movenet_v').checked===true){
+            model_type = 6;
+            cb_unchecked2();
+            document.getElementById('movenet_v').checked=true;
+        }
+    }
+
+</script>
+</body>
+
+</html>

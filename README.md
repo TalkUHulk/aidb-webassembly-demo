@@ -6,7 +6,7 @@
 
 Prior to starting, make sure you have `cmake` installed.
 
-* 1 Clone ai.deploy.box
+* 1. Clone ai.deploy.box
 
 ```
 https://github.com/TalkUHulk/ai.deploy.box.git
@@ -14,7 +14,7 @@ cd ai.deploy.box
 mkdir build && cd build
 ```
 
-* 2 Install emscripten
+* 2. Install emscripten
 
 ```shell
 git clone https://github.com/emscripten-core/emsdk.git
@@ -25,7 +25,7 @@ cd emsdk
 source emsdk_env.sh
 ```
 
-* 3 Build
+* 3. Build
 
 ```shell
 cmake .. -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake -DWASM_FEATURE=basic -DENGINE_NCNN_WASM=ON -DENGINE_MNN=OFF -DENGINE_ORT=OFF -DENGINE_NCNN=OFF -DENGINE_TNN=OFF -DENGINE_OPV=OFF -DENGINE_PPLite=OFF
@@ -41,7 +41,7 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=$EMSDK/upstream/emscripten/cmake/Modules/Platfor
 make -j4
 ```
 
-* 4 Deploy
+* 4. Deploy
 
 Clone the project, create a folder named `aidb` in the root project directory and copy the following files into it:
 
@@ -66,7 +66,7 @@ Run local server:
 python3 server.py
 ```
 
-* 5 Access local server(chrome as a example)
+* 5. Access local server(chrome as a example)
 
 ```
 # launch chrome browser, enter following command to address bar and press ENTER:
